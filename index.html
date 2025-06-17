@@ -1,0 +1,978 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>
+	Minha Lista de Filmes
+</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+<style>
+  .read-more-btn {
+  margin-top: 12px;
+  background-color: #444;
+  color: white;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.read-more-btn:hover {
+  background-color: #666;
+}
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.85);
+  overflow: auto;
+}
+.modal-content {
+  margin: 5% auto;
+  background: #1a1a1a;
+  color: #ddd;
+  padding: 20px;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 12px;
+  text-align: center;
+}
+.modal-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+.close {
+  float: right;
+  font-size: 24px;
+  color: #bbb;
+  cursor: pointer;
+}
+ * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: #000000;
+      color: #d1d1d1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-weight: 700;
+      font-size: 2.5rem;
+      color: #888888;
+      text-align: center;
+    }
+    .search-container {
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 30px;
+      position: relative;
+    }
+    .search-container input[type="text"] {
+      width: 100%;
+      padding: 12px 45px 12px 15px;
+      font-size: 1.1rem;
+      border-radius: 30px;
+      border: none;
+      outline: none;
+      background-color: #111111;
+      color: #d1d1d1;
+      box-shadow: 0 0 8px #555555aa;
+      transition: box-shadow 0.3s ease;
+    }
+    .search-container input[type="text"]:focus {
+      box-shadow: 0 0 12px #888888ff;
+    }
+    .search-container .fa-search {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888888;
+      font-size: 1.3rem;
+      pointer-events: none;
+    }
+    .posters-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill,minmax(180px,1fr));
+      gap: 25px;
+      width: 100%;
+      max-width: 1200px;
+    }
+    .poster-card {
+      background-color: #111111;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(136,136,136,0.3);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+    .poster-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 20px rgba(136,136,136,0.7);
+    }
+    .poster-image {
+      width: 100%;
+      height: 270px;
+      object-fit: cover;
+      background-color: #222222;
+      flex-shrink: 0;
+    }
+    .poster-info {
+      padding: 15px 12px 18px 12px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .poster-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 8px;
+      color: #888888;
+      line-height: 1.2;
+      min-height: 2.6em;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .poster-description {
+      font-size: 0.9rem;
+      color: #bbb;
+      line-height: 1.3;
+      flex-grow: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-height: 3.9em;
+    }
+    @media (max-width: 480px) {
+      .poster-image {
+        height: 220px;
+      }
+    }
+</style>
+</head>
+<body>
+<h1>Minha Lista de Filmes</h1>
+<div class="search-container">
+<input aria-label="Pesquisar filmes" id="searchInput" placeholder="Pesquisar filmes..." type="text"/>
+<i class="fas fa-search"></i>
+</div>
+<div aria-atomic="true" aria-live="polite" class="posters-grid" id="postersGrid">
+
+<!-- Início do filme -->
+<div class="poster-card" data-description="A high-school boy, Cameron, cannot date Bianca until her anti-social older sister, Kat, has a boyfriend. So, Cameron pays a mysterious boy, Patrick, to charm Kat." data-link="https://www.imdb.com/title/tt0147800/" data-title="10 Things I Hate About You" tabindex="0">
+  <img alt="Poster de 10 Things I Hate About You" class="poster-image" height="450" src="imagens/10_Things_I_Hate_About_You.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">10 Things I Hate About You</div>
+    <div class="poster-description">A high-school boy, Cameron, cannot date Bianca until her anti-social older sister, Kat, has a boyfriend. So, Cameron pays a mysterious boy, Patrick, to charm Kat.</div>
+    <button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+  </div>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="When a mysterious artifact is uncovered on the Moon, a spacecraft manned by two humans and one supercomputer is sent to Jupiter to find its origins." data-link="https://www.imdb.com/title/tt0062622/" data-title="2001: A Space Odyssey" tabindex="0">
+  <img alt="Poster de 2001: A Space Odyssey" class="poster-image" height="450" src="imagens/2001.png" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">2001: A Space Odyssey</div>
+    <div class="poster-description">When a mysterious artifact is uncovered on the Moon, a spacecraft manned by two humans and one supercomputer is sent to Jupiter to find its origins.</div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+  </div>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Robert Ford, who has idolized Jesse James since childhood, tries hard to join the resurgent gang of the Missouri outlaw, but gradually becomes resentful of the bandit leader." data-link="https://www.imdb.com/title/tt0443680/" data-title="The Assassination of Jesse James by the Coward Robert Ford" tabindex="0">
+  <img alt="Poster de The Assassination of Jesse James by the Coward Robert Ford" class="poster-image" height="450" src="imagens/The_Assassination_of_Jesse_James.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Assassination of Jesse James by the Coward Robert Ford</div>
+    <div class="poster-description">Robert Ford, who has idolized Jesse James since childhood, tries hard to join the resurgent gang of the Missouri outlaw, but gradually becomes resentful of the bandit leader.</div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+  </div>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A biopic depicting the early years of legendary director and aviator Howard Hughes' career from the late 1920s to the mid 1940s." data-link="https://www.imdb.com/title/tt0338751/" data-title="The Aviator" tabindex="0">
+  <img alt="Poster de The Aviator" class="poster-image" height="450" src="imagens/The_Aviator.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Aviator</div>
+    <div class="poster-description">A biopic depicting the early years of legendary director and aviator Howard Hughes' career from the late 1920s to the mid 1940s.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Dr. Sayer is a pioneering neurologist who wants to take a risk and give his patients who suffer from encephalitis a drug used for Parkinson's Disease. He tries it out on one man who miraculously wakes from his perpetual catatonic ..." data-link="https://www.imdb.com/title/tt0099077/" data-title="Awakenings" tabindex="0">
+  <img alt="Poster de Awakenings" class="poster-image" height="450" src="imagens/Awakenings.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Awakenings</div>
+    <div class="poster-description">Dr. Sayer is a pioneering neurologist who wants to take a risk and give his patients who suffer from encephalitis a drug used for Parkinson's Disease. He tries it out on one man who miraculously wakes from his perpetual catatonic ...</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Coerced into working for a crime boss, a young getaway driver must face the music when a doomed heist threatens his life, love, and freedom." data-link="https://www.imdb.com/title/tt3890160/" data-title="Baby Driver" tabindex="0">
+  <img alt="Poster de Baby Driver" class="poster-image" height="450" src="imagens/Baby_Driver.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Baby Driver</div>
+    <div class="poster-description">Coerced into working for a crime boss, a young getaway driver must face the music when a doomed heist threatens his life, love, and freedom.</div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+  </div>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A tale of outsized ambition and outrageous excess, it traces the rise and fall of multiple characters during an era of unbridled decadence and depravity in early Hollywood." data-link="https://www.imdb.com/title/tt10640346/" data-title="Babylon" tabindex="0">
+  <img alt="Poster de Babylon" class="poster-image" height="450" src="imagens/Babylon.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Babylon</div>
+    <div class="poster-description">A tale of outsized ambition and outrageous excess, it traces the rise and fall of multiple characters during an era of unbridled decadence and depravity in early Hollywood.</div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+  </div>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A family coping with addiction over many years goes through the heartbreaking and inspiring experience of survival, relapse and recovery." data-link="https://www.imdb.com/title/tt1226837/" data-title="Beautiful Boy" tabindex="0">
+  <img alt="Poster de Beautiful Boy" class="poster-image" height="450" src="imagens/Beautiful_Boy.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Beautiful Boy</div>
+    <div class="poster-description">A family coping with addiction over many years goes through the heartbreaking and inspiring experience of survival, relapse and recovery.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A young man and woman meet on a train in Europe, and wind up spending one evening together in Vienna. Unfortunately, both know that this will probably be their only night together." data-link="https://www.imdb.com/title/tt0112471/" data-title="Before Sunrise" tabindex="0">
+  <img alt="Poster de Before Sunrise" class="poster-image" height="450" src="imagens/Before_Sunrise.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Before Sunrise</div>
+    <div class="poster-description">A young man and woman meet on a train in Europe, and wind up spending one evening together in Vienna. Unfortunately, both know that this will probably be their only night together.</div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+  </div>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Nine years after Jesse and Celine first met, they encounter each other again on the French leg of Jesse's book tour." data-link="https://www.imdb.com/title/tt0381681/" data-title="Before Sunset" tabindex="0">
+  <img alt="Poster de Before Sunset" class="poster-image" height="450" src="imagens/Before_Sunset.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Before Sunset</div>
+    <div class="poster-description">Nine years after Jesse and Celine first met, they encounter each other again on the French leg of Jesse's book tour.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Ron Stallworth, an African American police officer from Colorado Springs, Colorado, successfully infiltrates the local Ku Klux Klan branch aided by a Jewish surrogate who eventually becomes its leader. Based on actual events." data-link="https://www.imdb.com/title/tt7349662/" data-title="BlacKkKlansman" tabindex="0">
+  <img alt="Poster de BlacKkKlansman" class="poster-image" height="450" src="imagens/BlacKkKlansman.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">BlacKkKlansman</div>
+    <div class="poster-description">Ron Stallworth, an African American police officer from Colorado Springs, Colorado, successfully infiltrates the local Ku Klux Klan branch aided by a Jewish surrogate who eventually becomes its leader. Based on actual events.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A blade runner must pursue and terminate four replicants who stole a ship in space and have returned to Earth to find their creator." data-link="https://www.imdb.com/title/tt0083658/" data-title="Blade Runner" tabindex="0">
+  <img alt="Poster de Blade Runner" class="poster-image" height="450" src="imagens/Blade_Runner.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Blade Runner</div>
+    <div class="poster-description">A blade runner must pursue and terminate four replicants who stole a ship in space and have returned to Earth to find their creator.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="The story of how George Jung, along with the Medellín Cartel headed by Pablo Escobar, established the American cocaine market in the 1970s in the United States." data-link="https://www.imdb.com/title/tt0221027/" data-title="Blow" tabindex="0">
+  <img alt="Poster de Blow" class="poster-image" height="450" src="imagens/Blow.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Blow</div>
+    <div class="poster-description">The story of how George Jung, along with the Medellín Cartel headed by Pablo Escobar, established the American cocaine market in the 1970s in the United States.</div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+  </div>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="The relationship of a contemporary married couple, charting their evolution over a span of years by cross-cutting between time periods." data-link="https://www.imdb.com/title/tt1120985/" data-title="Blue Valentine" tabindex="0">
+  <img alt="Poster de Blue Valentine" class="poster-image" height="450" src="imagens/Blue_Valentine.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Blue Valentine</div>
+    <div class="poster-description">The relationship of a contemporary married couple, charting their evolution over a span of years by cross-cutting between time periods.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Scottish warrior William Wallace leads his countrymen in a rebellion to free his homeland from the tyranny of King Edward I of England." data-link="https://www.imdb.com/title/tt0112573/" data-title="Braveheart" tabindex="0">
+  <img alt="Poster de Braveheart" class="poster-image" height="450" src="imagens/Braveheart.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Braveheart</div>
+    <div class="poster-description">Scottish warrior William Wallace leads his countrymen in a rebellion to free his homeland from the tyranny of King Edward I of England.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A visionary architect flees post-war Europe in 1947 for a brighter future in the United States and finds his life forever changed by a wealthy client." data-link="https://www.imdb.com/title/tt8999762/" data-title="The Brutalist" tabindex="0">
+  <img alt="Poster de The Brutalist" class="poster-image" height="450" src="imagens/The_Brutalist.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Brutalist</div>
+    <div class="poster-description">A visionary architect flees post-war Europe in 1947 for a brighter future in the United States and finds his life forever changed by a wealthy client.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A married couple is terrorized by a series of surveillance videotapes left on their front porch." data-link="https://www.imdb.com/title/tt0387898/" data-title="Caché" tabindex="0">
+  <img alt="Poster de Caché" class="poster-image" height="450" src="imagens/Caché.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Caché</div>
+    <div class="poster-description">A married couple is terrorized by a series of surveillance videotapes left on their front porch.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="In Las Vegas, two best friends--a casino executive and a Mafia enforcer--compete for a gambling empire and a fast-living, fast-loving socialite." data-link="https://www.imdb.com/title/tt0112641/" data-title="Casino" tabindex="0">
+  <img alt="Poster de Casino" class="poster-image" height="450" src="imagens/Casino.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Casino</div>
+    <div class="poster-description">In Las Vegas, two best friends--a casino executive and a Mafia enforcer--compete for a gambling empire and a fast-living, fast-loving socialite.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="After finding an old rifle, a young boy joins the Soviet resistance movement against ruthless German forces and experiences the horrors of World War II." data-link="https://www.imdb.com/title/tt0091251/" data-title="Come and See" tabindex="0">
+  <img alt="Poster de Come and See" class="poster-image" height="450" src="imagens/Come_And_See.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Come and See</div>
+    <div class="poster-description">After finding an old rifle, a young boy joins the Soviet resistance movement against ruthless German forces and experiences the horrors of World War II.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="In 1985 Dallas, electrician and hustler Ron Woodroof works around the system to help AIDS patients get the medication they need after he is diagnosed with the disease." data-link="https://www.imdb.com/title/tt0790636/" data-title="Dallas Buyers Club" tabindex="0">
+  <img alt="Poster de Dallas Buyers Club" class="poster-image" height="450" src="imagens/Dallas_Buyers_Club.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Dallas Buyers Club</div>
+    <div class="poster-description">In 1985 Dallas, electrician and hustler Ron Woodroof works around the system to help AIDS patients get the medication they need after he is diagnosed with the disease.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="When a menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman, James Gordon and Harvey Dent must work together to put an end to the madness." data-link="https://www.imdb.com/title/tt0468569/" data-title="The Dark Knight" tabindex="0">
+  <img alt="Poster de The Dark Knight" class="poster-image" height="450" src="imagens/The_Dark_Knight.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Dark Knight</div>
+    <div class="poster-description">When a menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman, James Gordon and Harvey Dent must work together to put an end to the madness.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="An in-depth examination of the ways in which the Vietnam War impacts and disrupts the lives of several friends in a small steel mill town in Pennsylvania." data-link="https://www.imdb.com/title/tt0077416/" data-title="The Deer Hunter" tabindex="0">
+  <img alt="Poster de The Deer Hunter" class="poster-image" height="450" src="imagens/The_Deer_Hunter.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Deer Hunter</div>
+    <div class="poster-description">An in-depth examination of the ways in which the Vietnam War impacts and disrupts the lives of several friends in a small steel mill town in Pennsylvania.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="An FBI undercover agent infiltrates the mob and finds himself identifying more with the Mafia life--at the expense of his regular one." data-link="https://www.imdb.com/title/tt0119008/" data-title="Donnie Brasco" tabindex="0">
+  <img alt="Poster de Donnie Brasco" class="poster-image" height="450" src="imagens/Donnie_Brasco.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Donnie Brasco</div>
+    <div class="poster-description">An FBI undercover agent infiltrates the mob and finds himself identifying more with the Mafia life--at the expense of his regular one.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="After narrowly escaping a bizarre accident, a troubled teenager is plagued by visions of a man in a large rabbit suit who manipulates him to commit a series of crimes." data-link="https://www.imdb.com/title/tt0246578/" data-title="Donnie Darko" tabindex="0">
+  <img alt="Poster de Donnie Darko" class="poster-image" height="450" src="imagens/Donnie_Darko.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Donnie Darko</div>
+    <div class="poster-description">After narrowly escaping a bizarre accident, a troubled teenager is plagued by visions of a man in a large rabbit suit who manipulates him to commit a series of crimes.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="In 1997 Rio de Janeiro, Captain Nascimento has to find a substitute for his position while trying to take down drug dealers and criminals before the Pope visits." data-link="https://www.imdb.com/title/tt0861739/" data-title="Elite Squad" tabindex="0">
+  <img alt="Poster de Elite Squad" class="poster-image" height="450" src="imagens/Elite_Squad.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Elite Squad</div>
+    <div class="poster-description">In 1997 Rio de Janeiro, Captain Nascimento has to find a substitute for his position while trying to take down drug dealers and criminals before the Pope visits.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Depois de um motim, o ex-capitão Nascimento, agora um alto oficial do Rio de Janeiro, se vê envolvido numa disputa política entre o governo e os paramilitares." data-link="https://www.imdb.com/pt/title/tt1555149/" data-title="Elite Squad The Enemy Within" tabindex="0">
+  <img alt="Poster de Elite Squad The Enemy Within" class="poster-image" height="450" src="imagens/Elite_Squad_The_Enemy_Within.png" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Elite Squad</div>
+    <div class="poster-description">Depois de um motim, o ex-capitão Nascimento, agora um alto oficial do Rio de Janeiro, se vê envolvido numa disputa política entre o governo e os paramilitares.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A young English boy struggles to survive under Japanese occupation of China during World War II." data-link="https://www.imdb.com/title/tt0092965/" data-title="Empire of the Sun" tabindex="0">
+  <img alt="Poster de Empire of the Sun" class="poster-image" height="450" src="imagens/Empire_of_the_Sun.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Empire of the Sun</div>
+    <div class="poster-description">A young English boy struggles to survive under Japanese occupation of China during World War II.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A middle-aged Chinese immigrant is swept up into an insane adventure in which she alone can save existence by exploring other universes and connecting with the lives she could have led." data-link="https://www.imdb.com/title/tt6710474/" data-title="Everything Everywhere All at Once" tabindex="0">
+  <img alt="Poster de Everything Everywhere All at Once" class="poster-image" height="450" src="imagens/Everything_Everywhere_All_at_Once.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Everything Everywhere All at Once</div>
+    <div class="poster-description">A middle-aged Chinese immigrant is swept up into an insane adventure in which she alone can save existence by exploring other universes and connecting with the lives she could have led.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A Manhattan doctor embarks on a bizarre, night-long odyssey after his wife's admission of unfulfilled longing." data-link="https://www.imdb.com/title/tt0120663/" data-title="Eyes Wide Shut" tabindex="0">
+  <img alt="Poster de Eyes Wide Shut" class="poster-image" height="450" src="imagens/Eyes_Wide_Shut.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Eyes Wide Shut</div>
+    <div class="poster-description">A Manhattan doctor embarks on a bizarre, night-long odyssey after his wife's admission of unfulfilled longing.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Minnesota car salesman Jerry Lundegaard's inept crime falls apart due to his and his henchmen's bungling and the persistent police work of the quite pregnant Marge Gunderson." data-link="https://www.imdb.com/title/tt0116282/" data-title="Fargo" tabindex="0">
+  <img alt="Poster de Fargo" class="poster-image" height="450" src="imagens/Fargo.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Fargo</div>
+    <div class="poster-description">Minnesota car salesman Jerry Lundegaard's inept crime falls apart due to his and his henchmen's bungling and the persistent police work of the quite pregnant Marge Gunderson.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A military lawyer intends to prove that two US Marines charged with murdering a fellow Marine were only following their base commander's orders." data-link="https://www.imdb.com/title/tt0104257/" data-title="A Few Good Men" tabindex="0">
+  <img alt="Poster de A Few Good Men" class="poster-image" height="450" src="imagens/A_Few_Good_Men.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">A Few Good Men</div>
+    <div class="poster-description">A military lawyer intends to prove that two US Marines charged with murdering a fellow Marine were only following their base commander's orders.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A single mother and the manager of a roadside motel do their utmost to maintain the innocence of a six-year-old girl's life." data-link="https://www.imdb.com/title/tt5649144/" data-title="The Florida Project" tabindex="0">
+  <img alt="Poster de The Florida Project" class="poster-image" height="450" src="imagens/The_Florida_Project.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Florida Project</div>
+    <div class="poster-description">A single mother and the manager of a roadside motel do their utmost to maintain the innocence of a six-year-old girl's life.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Cat is a solitary animal, but as its home is devastated by a great flood, he finds refuge on a boat populated by various species, and will have to team up with them despite their differences." data-link="https://www.imdb.com/title/tt4772188/" data-title="Flow" tabindex="0">
+  <img alt="Poster de Flow" class="poster-image" height="450" src="imagens/Flow.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Flow</div>
+    <div class="poster-description">Cat is a solitary animal, but as its home is devastated by a great flood, he finds refuge on a boat populated by various species, and will have to team up with them despite their differences.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A pragmatic U.S. Marine observes the dehumanizing effects the Vietnam War has on his fellow recruits from their brutal boot camp training to the bloody street fighting in Hue." data-link="https://www.imdb.com/title/tt0093058/" data-title="Full Metal Jacket" tabindex="0">
+  <img alt="Poster de Full Metal Jacket" class="poster-image" height="450" src="imagens/Full_Metal_Jacket.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Full Metal Jacket</div>
+    <div class="poster-description">A pragmatic U.S. Marine observes the dehumanizing effects the Vietnam War has on his fellow recruits from their brutal boot camp training to the bloody street fighting in Hue.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="An American expat tries to sell off his highly profitable marijuana empire in London, triggering plots, schemes, bribery and blackmail in an attempt to steal his domain out from under him." data-link="https://www.imdb.com/title/tt8367814/" data-title="The Gentlemen" tabindex="0">
+  <img alt="Poster de The Gentlemen" class="poster-image" height="450" src="imagens/The_Gentlemen.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Gentlemen</div>
+    <div class="poster-description">An American expat tries to sell off his highly profitable marijuana empire in London, triggering plots, schemes, bribery and blackmail in an attempt to steal his domain out from under him.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Journalist Mikael Blomkvist is aided in his search for a woman who has been missing for 40 years by hacker Lisbeth Salander." data-link="https://www.imdb.com/title/tt1568346/" data-title="The Girl with the Dragon Tattoo" tabindex="0">
+  <img alt="Poster de The Girl with the Dragon Tattoo" class="poster-image" height="450" src="imagens/The_Girl_with_the_Dragon_Tattoo.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Girl with the Dragon Tattoo</div>
+    <div class="poster-description">Journalist Mikael Blomkvist is aided in his search for a woman who has been missing for 40 years by hacker Lisbeth Salander.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A bounty-hunting scam joins two men in an uneasy alliance against a third in a race to find a fortune in gold buried in a remote cemetery." data-link="https://www.imdb.com/title/tt0060196/" data-title="The Good, the Bad and the Ugly" tabindex="0">
+  <img alt="Poster de The Good, the Bad and the Ugly" class="poster-image" height="450" src="imagens/The_Good,_the_Bad_and_the_Ugly.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Good, the Bad and the Ugly</div>
+    <div class="poster-description">A bounty-hunting scam joins two men in an uneasy alliance against a third in a race to find a fortune in gold buried in a remote cemetery.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="After a Hmong teenager tries to steal his prized 1972 Gran Torino, a disgruntled, prejudiced Korean War veteran seeks to redeem both the boy and himself." data-link="https://www.imdb.com/title/tt1205489/" data-title="Gran Torino" tabindex="0">
+  <img alt="Poster de Gran Torino" class="poster-image" height="450" src="imagens/Gran_Torino.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Gran Torino</div>
+    <div class="poster-description">After a Hmong teenager tries to steal his prized 1972 Gran Torino, a disgruntled, prejudiced Korean War veteran seeks to redeem both the boy and himself.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A narcissistic, self-centered weatherman finds himself in a time loop on Groundhog Day." data-link="https://www.imdb.com/title/tt0107048/" data-title="Groundhog Day" tabindex="0">
+  <img alt="Poster de Groundhog Day" class="poster-image" height="450" src="imagens/Groundhog_Day.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Groundhog Day</div>
+    <div class="poster-description">A narcissistic, self-centered weatherman finds himself in a time loop on Groundhog Day.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="In 1930s Korea, a girl is hired as a handmaiden to a Japanese heiress who lives a secluded life on a countryside estate. But the maid has a secret: She is a pickpocket recruited by a swindler to help seduce the Lady and steal her ..." data-link="https://www.imdb.com/title/tt4016934/" data-title="The Handmaiden" tabindex="0">
+  <img alt="Poster de The Handmaiden" class="poster-image" height="450" src="imagens/The_Handmaiden.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Handmaiden</div>
+    <div class="poster-description">In 1930s Korea, a girl is hired as a handmaiden to a Japanese heiress who lives a secluded life on a countryside estate. But the maid has a secret: She is a pickpocket recruited by a swindler to help seduce the Lady and steal her ...</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="In the dead of a Wyoming winter, a bounty hunter and his prisoner find shelter in a cabin currently inhabited by a collection of nefarious characters." data-link="https://www.imdb.com/title/tt3460252/" data-title="The Hateful Eight" tabindex="0">
+  <img alt="Poster de The Hateful Eight" class="poster-image" height="450" src="imagens/The_Hateful_Eight.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Hateful Eight</div>
+    <div class="poster-description">In the dead of a Wyoming winter, a bounty hunter and his prisoner find shelter in a cabin currently inhabited by a collection of nefarious characters.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A teacher lives a lonely life, all the while struggling over his son's custody. His life slowly gets better as he finds love and receives good news from his son, but his new luck is about to be brutally shattered by an innocent li..." data-link="https://www.imdb.com/title/tt2106476/" data-title="The Hunt" tabindex="0">
+  <img alt="Poster de The Hunt" class="poster-image" height="450" src="imagens/The_Hunt.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Hunt</div>
+    <div class="poster-description">A teacher lives a lonely life, all the while struggling over his son's custody. His life slowly gets better as he finds love and receives good news from his son, but his new luck is about to be brutally shattered by an innocent li...</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Jackie Cogan is an enforcer hired to restore order after three dumb guys rob a Mob protected card game, causing the local criminal economy to collapse." data-link="https://www.imdb.com/title/tt1764234/" data-title="Killing Them Softly" tabindex="0">
+  <img alt="Poster de Killing Them Softly" class="poster-image" height="450" src="imagens/Killing_Them_Softly.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Killing Them Softly</div>
+    <div class="poster-description">Jackie Cogan is an enforcer hired to restore order after three dumb guys rob a Mob protected card game, causing the local criminal economy to collapse.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="When an open-minded Jewish waiter and his son become victims of the Holocaust, he uses a perfect mixture of will, humor and imagination to protect his son from the dangers around their camp." data-link="https://www.imdb.com/title/tt0118799/" data-title="Life Is Beautiful" tabindex="0">
+  <img alt="Poster de Life Is Beautiful" class="poster-image" height="450" src="imagens/Life_Is_Beautiful.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Life Is Beautiful</div>
+    <div class="poster-description">When an open-minded Jewish waiter and his son become victims of the Holocaust, he uses a perfect mixture of will, humor and imagination to protect his son from the dangers around their camp.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Uma jovem que sofre de Parkinson faz amizade com um traficante de drogas que trabalha para a Pfizer nos anos 90 em Pittsburgh." data-link="https://www.imdb.com/pt/title/tt0758752/" data-title="Love And Other Drugs" tabindex="0">
+  <img alt="Poster de Love And Other Drugs" class="poster-image" height="450" src="imagens/Love.png" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Love And Other Drugs</div>
+    <div class="poster-description">Uma jovem que sofre de Parkinson faz amizade com um traficante de drogas que trabalha para a Pfizer nos anos 90 em Pittsburgh..</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron." data-link="https://www.imdb.com/title/tt0120737/" data-title="The Lord of the Rings: The Fellowship of the Ring" tabindex="0">
+  <img alt="Poster de The Lord of the Rings: The Fellowship of the Ring" class="poster-image" height="450" src="imagens/The_Lord_of_the_Rings_The_Fellowship_of_the_Ring.png" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Lord of the Rings: The Fellowship of the Ring</div>
+    <div class="poster-description">A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="While Frodo and Sam edge closer to Mordor with the help of the shifty Gollum, the divided fellowship makes a stand against Sauron's new ally, Saruman, and his hordes of Isengard." data-link="https://www.imdb.com/title/tt0167261/" data-title="The Lord of the Rings: The Two Towers" tabindex="0">
+  <img alt="Poster de The Lord of the Rings: The Two Towers" class="poster-image" height="450" src="imagens/The_Lord_of_the_Rings_The_Two_Towers.png" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Lord of the Rings: The Two Towers</div>
+    <div class="poster-description">While Frodo and Sam edge closer to Mordor with the help of the shifty Gollum, the divided fellowship makes a stand against Sauron's new ally, Saruman, and his hordes of Isengard.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring." data-link="https://www.imdb.com/title/tt0167260/" data-title="The Lord of the Rings: The Return of the King" tabindex="0">
+  <img alt="Poster de The Lord of the Rings: The Return of the King" class="poster-image" height="450" src="imagens/The_Lord_of_the_Rings_The_Return_of_the_King.png" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Lord of the Rings: The Return of the King</div>
+    <div class="poster-description">Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze from Frodo and Sam as they approach Mount Doom with the One Ring.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="An arms dealer confronts the morality of his work as he is being chased by an INTERPOL Agent." data-link="https://www.imdb.com/title/tt0399295/" data-title="Lord of War" tabindex="0">
+  <img alt="Poster de Lord of War" class="poster-image" height="450" src="imagens/Lord_of_War.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Lord of War</div>
+    <div class="poster-description">An arms dealer confronts the morality of his work as he is being chased by an INTERPOL Agent.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="In a post-apocalyptic wasteland, a woman rebels against a tyrannical ruler in search for her homeland with the aid of a group of female prisoners, a psychotic worshipper and a drifter named Max." data-link="https://www.imdb.com/title/tt1392190/" data-title="Mad Max: Fury Road" tabindex="0">
+  <img alt="Poster de Mad Max: Fury Road" class="poster-image" height="450" src="imagens/Mad_Max.png" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Mad Max: Fury Road</div>
+    <div class="poster-description">In a post-apocalyptic wasteland, a woman rebels against a tyrannical ruler in search for her homeland with the aid of a group of female prisoners, a psychotic worshipper and a drifter named Max.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="An epic mosaic of interrelated characters in search of love, forgiveness and meaning in the San Fernando Valley." data-link="https://www.imdb.com/title/tt0175880/" data-title="Magnolia" tabindex="0">
+  <img alt="Poster de Magnolia" class="poster-image" height="450" src="imagens/Magnolia.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Magnolia</div>
+    <div class="poster-description">An epic mosaic of interrelated characters in search of love, forgiveness and meaning in the San Fernando Valley.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="While on a trip to Paris with his fiancée's family, a nostalgic screenwriter finds himself mysteriously going back to the 1920s every day at midnight." data-link="https://www.imdb.com/title/tt1605783/" data-title="Midnight in Paris" tabindex="0">
+  <img alt="Poster de Midnight in Paris" class="poster-image" height="450" src="imagens/Midnight_in_Paris.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Midnight in Paris</div>
+    <div class="poster-description">While on a trip to Paris with his fiancée's family, a nostalgic screenwriter finds himself mysteriously going back to the 1920s every day at midnight.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="King Arthur and his Knights of the Round Table embark on a surreal, low-budget search for the Holy Grail, encountering many, very silly obstacles." data-link="https://www.imdb.com/title/tt0071853/" data-title="Monty Python and the Holy Grail" tabindex="0">
+  <img alt="Poster de Monty Python and the Holy Grail" class="poster-image" height="450" src="imagens/Monty_Python_and_the_Holy_Grail.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Monty Python and the Holy Grail</div>
+    <div class="poster-description">King Arthur and his Knights of the Round Table embark on a surreal, low-budget search for the Holy Grail, encountering many, very silly obstacles.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="After a car wreck on Mulholland Drive renders a woman amnesiac, she and a Hollywood-hopeful search for clues and answers across Los Angeles in a twisting venture beyond dreams and reality." data-link="https://www.imdb.com/title/tt0166924/" data-title="Mulholland Drive" tabindex="0">
+  <img alt="Poster de Mulholland Drive" class="poster-image" height="450" src="imagens/Mulholland_Drive.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Mulholland Drive</div>
+    <div class="poster-description">After a car wreck on Mulholland Drive renders a woman amnesiac, she and a Hollywood-hopeful search for clues and answers across Los Angeles in a twisting venture beyond dreams and reality.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A crime lord ascends to power and becomes megalomaniacal while a maverick police detective vows to stop him." data-link="https://www.imdb.com/title/tt0102526/" data-title="New Jack City" tabindex="0">
+  <img alt="Poster de New Jack City" class="poster-image" height="450" src="imagens/New_Jack_City.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">New Jack City</div>
+    <div class="poster-description">A crime lord ascends to power and becomes megalomaniacal while a maverick police detective vows to stop him.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A set of circumstances makes Anna Scott, a famous actress, fall in love with William Thacker, owner of a bookstore in Notting Hill. But the paparazzi's fascination with her complicates their bond." data-link="https://www.imdb.com/title/tt0125439/" data-title="Notting Hill" tabindex="0">
+  <img alt="Poster de Notting Hill" class="poster-image" height="450" src="imagens/Notting_Hill.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Notting Hill</div>
+    <div class="poster-description">A set of circumstances makes Anna Scott, a famous actress, fall in love with William Thacker, owner of a bookstore in Notting Hill. But the paparazzi's fascination with her complicates their bond.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="After being kidnapped and imprisoned for fifteen years, Oh Dae-Su is released, only to find that he must track down his captor in five days." data-link="https://www.imdb.com/title/tt0364569/" data-title="Oldboy" tabindex="0">
+  <img alt="Poster de Oldboy" class="poster-image" height="450" src="imagens/Oldboy.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Oldboy</div>
+    <div class="poster-description">After being kidnapped and imprisoned for fifteen years, Oh Dae-Su is released, only to find that he must track down his captor in five days.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A former Prohibition-era Jewish gangster returns to the Lower East Side of Manhattan 35 years later, where he must once again confront the ghosts and regrets of his old life." data-link="https://www.imdb.com/title/tt0087843/" data-title="Once Upon a Time in America" tabindex="0">
+  <img alt="Poster de Once Upon a Time in America" class="poster-image" height="450" src="imagens/Once_Upon_a_Time_in_America.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Once Upon a Time in America</div>
+    <div class="poster-description">A former Prohibition-era Jewish gangster returns to the Lower East Side of Manhattan 35 years later, where he must once again confront the ghosts and regrets of his old life.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Travis Henderson, an aimless drifter who has been missing for four years, wanders out of the desert and must reconnect with society, himself, his life, and his family." data-link="https://www.imdb.com/title/tt0087884/" data-title="Paris, Texas" tabindex="0">
+  <img alt="Poster de Paris, Texas" class="poster-image" height="450" src="imagens/Paris,_Texas.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Paris, Texas</div>
+    <div class="poster-description">Travis Henderson, an aimless drifter who has been missing for four years, wanders out of the desert and must reconnect with society, himself, his life, and his family.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="During WWII, acclaimed Polish musician Wladyslaw faces various struggles as he loses contact with his family. As the situation worsens, he hides in the ruins of Warsaw in order to survive." data-link="https://www.imdb.com/title/tt0253474/" data-title="The Pianist" tabindex="0">
+  <img alt="Poster de The Pianist" class="poster-image" height="450" src="imagens/The_Pianist.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Pianist</div>
+    <div class="poster-description">During WWII, acclaimed Polish musician Wladyslaw faces various struggles as he loses contact with his family. As the situation worsens, he hides in the ruins of Warsaw in order to survive.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="On an isolated island in Brittany at the end of the eighteenth century, a female painter is obliged to paint a wedding portrait of a young woman." data-link="https://www.imdb.com/title/tt8613070/" data-title="Portrait of a Lady on Fire" tabindex="0">
+  <img alt="Poster de Portrait of a Lady on Fire" class="poster-image" height="450" src="imagens/Portrait_of_a_Lady_on_Fire.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Portrait of a Lady on Fire</div>
+    <div class="poster-description">On an isolated island in Brittany at the end of the eighteenth century, a female painter is obliged to paint a wedding portrait of a young woman.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="As his last assignment, a temporal agent is tasked to travel back in time and prevent a bomb attack in New York in 1975. The hunt, however, turns out to be beyond the bounds of possibility." data-link="https://www.imdb.com/title/tt2397535/" data-title="Predestination" tabindex="0">
+  <img alt="Poster de Predestination" class="poster-image" height="450" src="imagens/Predestination.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Predestination</div>
+    <div class="poster-description">As his last assignment, a temporal agent is tasked to travel back in time and prevent a bomb attack in New York in 1975. The hunt, however, turns out to be beyond the bounds of possibility.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A bedridden boy's grandfather reads him the story of a farmboy-turned-pirate who encounters numerous obstacles, enemies and allies in his quest to be reunited with his true love." data-link="https://www.imdb.com/title/tt0093779/" data-title="The Princess Bride" tabindex="0">
+  <img alt="Poster de The Princess Bride" class="poster-image" height="450" src="imagens/The_Princess_Bride.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Princess Bride</div>
+    <div class="poster-description">A bedridden boy's grandfather reads him the story of a farmboy-turned-pirate who encounters numerous obstacles, enemies and allies in his quest to be reunited with his true love.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="When New York editor Margaret faces deportation, she convinces her assistant Andrew to marry her in return for a promotion. However, when she visits his hometown, it changes her in many ways." data-link="https://www.imdb.com/title/tt1041829/" data-title="The Proposal" tabindex="0">
+  <img alt="Poster de The Proposal" class="poster-image" height="450" src="imagens/The_Proposal.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Proposal</div>
+    <div class="poster-description">When New York editor Margaret faces deportation, she convinces her assistant Andrew to marry her in return for a promotion. However, when she visits his hometown, it changes her in many ways.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="The Feds try to take down notorious American gangsters John Dillinger, Baby Face Nelson, and Pretty Boy Floyd during a booming crime wave in the 1930s." data-link="https://www.imdb.com/title/tt1152836/" data-title="Public Enemies" tabindex="0">
+  <img alt="Poster de Public Enemies" class="poster-image" height="450" src="imagens/Public_Enemies.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Public Enemies</div>
+    <div class="poster-description">The Feds try to take down notorious American gangsters John Dillinger, Baby Face Nelson, and Pretty Boy Floyd during a booming crime wave in the 1930s.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption." data-link="https://www.imdb.com/title/tt0110912/" data-title="Pulp Fiction" tabindex="0">
+  <img alt="Poster de Pulp Fiction" class="poster-image" height="450" src="imagens/Pulp_Fiction.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Pulp Fiction</div>
+    <div class="poster-description">The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="After a selfish L.A. yuppie learns his estranged father left a fortune to an autistic-savant brother in Ohio that he didn't know existed, he absconds with his brother and sets out across the country, hoping to gain a larger inheri..." data-link="https://www.imdb.com/title/tt0095953/" data-title="Rain Man" tabindex="0">
+  <img alt="Poster de Rain Man" class="poster-image" height="450" src="imagens/Rain_Man.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Rain Man</div>
+    <div class="poster-description">After a selfish L.A. yuppie learns his estranged father left a fortune to an autistic-savant brother in Ohio that he didn't know existed, he absconds with his brother and sets out across the country, hoping to gain a larger inheri...</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="When a simple jewelry heist goes horribly wrong, the surviving criminals begin to suspect that one of them is a police informant." data-link="https://www.imdb.com/title/tt0105236/" data-title="Reservoir Dogs" tabindex="0">
+  <img alt="Poster de Reservoir Dogs" class="poster-image" height="450" src="imagens/Reservoir_Dogs.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Reservoir Dogs</div>
+    <div class="poster-description">When a simple jewelry heist goes horribly wrong, the surviving criminals begin to suspect that one of them is a police informant.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Following the Normandy Landings, a group of U.S. soldiers go behind enemy lines to retrieve a paratrooper whose brothers have been killed in action." data-link="https://www.imdb.com/title/tt0120815/" data-title="Saving Private Ryan" tabindex="0">
+  <img alt="Poster de Saving Private Ryan" class="poster-image" height="450" src="imagens/Saving_Private_Ryan.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Saving Private Ryan</div>
+    <div class="poster-description">Following the Normandy Landings, a group of U.S. soldiers go behind enemy lines to retrieve a paratrooper whose brothers have been killed in action.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="In German-occupied Poland during World War II, industrialist Oskar Schindler gradually becomes concerned for his Jewish workforce after witnessing their persecution by the Nazis." data-link="https://www.imdb.com/title/tt0108052/" data-title="Schindler's List" tabindex="0">
+  <img alt="Poster de Schindler's List" class="poster-image" height="450" src="imagens/Schindler's_List.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Schindler's List</div>
+    <div class="poster-description">In German-occupied Poland during World War II, industrialist Oskar Schindler gradually becomes concerned for his Jewish workforce after witnessing their persecution by the Nazis.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A family heads to an isolated hotel for the winter, where a sinister presence influences the father into violence. At the same time, his psychic son sees horrifying forebodings from both the past and the future." data-link="https://www.imdb.com/title/tt0081505/" data-title="The Shining" tabindex="0">
+  <img alt="Poster de The Shining" class="poster-image" height="450" src="imagens/The_Shining.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Shining</div>
+    <div class="poster-description">A family heads to an isolated hotel for the winter, where a sinister presence influences the father into violence. At the same time, his psychic son sees horrifying forebodings from both the past and the future.</div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+  </div>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Unscrupulous boxing promoters, violent bookmakers, a Russian gangster, incompetent amateur robbers and supposedly Jewish jewelers fight to track down a priceless stolen diamond." data-link="https://www.imdb.com/title/tt0208092/" data-title="Snatch" tabindex="0">
+  <img alt="Poster de Snatch" class="poster-image" height="450" src="imagens/Snatch.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Snatch</div>
+    <div class="poster-description">Unscrupulous boxing promoters, violent bookmakers, a Russian gangster, incompetent amateur robbers and supposedly Jewish jewelers fight to track down a priceless stolen diamond.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="The flight of a rugby team crashes on a glacier in the Andes. The few passengers who survive the crash find themselves in one of the world's toughest environments to survive." data-link="https://www.imdb.com/title/tt16277242/" data-title="Society of the Snow" tabindex="0">
+  <img alt="Poster de Society of the Snow" class="poster-image" height="450" src="imagens/Society_of_the_Snow.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Society of the Snow</div>
+    <div class="poster-description">The flight of a rugby team crashes on a glacier in the Andes. The few passengers who survive the crash find themselves in one of the world's toughest environments to survive.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="The true story of how the Boston Globe uncovered the massive scandal of child molestation and cover-up within the local Catholic Archdiocese, shaking the entire Catholic Church to its core." data-link="https://www.imdb.com/title/tt1895587/" data-title="Spotlight" tabindex="0">
+  <img alt="Poster de Spotlight" class="poster-image" height="450" src="imagens/Spotlight.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Spotlight</div>
+    <div class="poster-description">The true story of how the Boston Globe uncovered the massive scandal of child molestation and cover-up within the local Catholic Archdiocese, shaking the entire Catholic Church to its core.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A writer recounts a childhood journey with his friends to find the body of a missing boy." data-link="https://www.imdb.com/title/tt0092005/" data-title="Stand by Me" tabindex="0">
+  <img alt="Poster de Stand by Me" class="poster-image" height="450" src="imagens/Stand_by_Me.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Stand by Me</div>
+    <div class="poster-description">A writer recounts a childhood journey with his friends to find the body of a missing boy.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A cyborg comes from the future, to kill a girl named Sarah Lee." data-link="https://www.imdb.com/title/tt5817168/" data-title="Terminator" tabindex="0">
+  <img alt="Poster de Terminator" class="poster-image" height="450" src="imagens/The_Terminator.png" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Terminator</div>
+    <div class="poster-description">A cyborg comes from the future, to kill a girl named Sarah Lee.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A cyborg, identical to the one who failed to kill Sarah Connor, must now protect her ten year old son John from an even more advanced and powerful cyborg." data-link="https://www.imdb.com/title/tt0103064/" data-title="Terminator 2: Judgment Day" tabindex="0">
+  <img alt="Poster de Terminator 2: Judgment Day" class="poster-image" height="450" src="imagens/Terminator_2.png" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Terminator 2: Judgment Day</div>
+    <div class="poster-description">A cyborg, identical to the one who failed to kill Sarah Connor, must now protect her ten year old son John from an even more advanced and powerful cyborg.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Com a Segunda Guerra Mundial como centro, a história é contada através dos olhos do Bruno, o filho de um comandante de um campo de concentração, sobre sua amizade com um menino judeu." data-link="https://www.imdb.com/pt/title/tt0914798/" data-title="The Boy in the Striped Pyjamas" tabindex="0">
+  <img alt="Poster de The Boy in the Striped Pyjamas" class="poster-image" height="450" src="imagens/The_Boy_ in_the_Striped_Pyjamas.png" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Boy in the Striped Pyjamas</div>
+    <div class="poster-description">Com a Segunda Guerra Mundial como centro, a história é contada através dos olhos do Bruno, o filho de um comandante de um campo de concentração, sobre sua amizade com um menino judeu..</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A research team in Antarctica is hunted by a shape-shifting alien that assumes the appearance of its victims." data-link="https://www.imdb.com/title/tt0084787/" data-title="The Thing" tabindex="0">
+  <img alt="Poster de The Thing" class="poster-image" height="450" src="imagens/The_Thing.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Thing</div>
+    <div class="poster-description">A research team in Antarctica is hunted by a shape-shifting alien that assumes the appearance of its victims.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic." data-link="https://www.imdb.com/title/tt0120338/" data-title="Titanic" tabindex="0">
+  <img alt="Poster de Titanic" class="poster-image" height="450" src="imagens/Titanic.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Titanic</div>
+    <div class="poster-description">A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Renton, deeply immersed in the Edinburgh drug scene, tries to clean up and get out despite the allure of drugs and the influence of friends." data-link="https://www.imdb.com/title/tt0117951/" data-title="Trainspotting" tabindex="0">
+  <img alt="Poster de Trainspotting" class="poster-image" height="450" src="imagens/Trainspotting.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Trainspotting</div>
+    <div class="poster-description">Renton, deeply immersed in the Edinburgh drug scene, tries to clean up and get out despite the allure of drugs and the influence of friends.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A stubborn teenager enlists the help of a tough U.S. Marshal to track down her father's murderer." data-link="https://www.imdb.com/title/tt1403865/" data-title="True Grit" tabindex="0">
+  <img alt="Poster de True Grit" class="poster-image" height="450" src="imagens/True_Grit.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">True Grit</div>
+    <div class="poster-description">A stubborn teenager enlists the help of a tough U.S. Marshal to track down her father's murderer.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="With his debts mounting and angry collectors closing in, a fast-talking New York City jeweler risks everything in hope of staying afloat and alive." data-link="https://www.imdb.com/title/tt5727208/" data-title="Uncut Gems" tabindex="0">
+  <img alt="Poster de Uncut Gems" class="poster-image" height="450" src="imagens/Uncut_Gems.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Uncut Gems</div>
+    <div class="poster-description">With his debts mounting and angry collectors closing in, a fast-talking New York City jeweler risks everything in hope of staying afloat and alive.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Retired Old West gunslinger Will Munny reluctantly takes on one last job to avenge an injustice with the help of his old partner and a newer outlaw known simply as The Schofield Kid." data-link="https://www.imdb.com/title/tt0105695/" data-title="Unforgiven" tabindex="0">
+  <img alt="Poster de Unforgiven" class="poster-image" height="450" src="imagens/Unforgiven.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Unforgiven</div>
+    <div class="poster-description">Retired Old West gunslinger Will Munny reluctantly takes on one last job to avenge an injustice with the help of his old partner and a newer outlaw known simply as The Schofield Kid.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="During Prohibition, Treasury agent Eliot Ness sets out to stop ruthless Chicago gangster Al Capone, and assembles a small, incorruptible team to help him." data-link="https://www.imdb.com/title/tt0094226/" data-title="The Untouchables" tabindex="0">
+  <img alt="Poster de The Untouchables" class="poster-image" height="450" src="imagens/The_Untouchables.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Untouchables</div>
+    <div class="poster-description">During Prohibition, Treasury agent Eliot Ness sets out to stop ruthless Chicago gangster Al Capone, and assembles a small, incorruptible team to help him.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="The sole survivor of a pier shoot-out tells the story of how a notorious criminal influenced the events that began with five criminals meeting in a seemingly random police lineup." data-link="https://www.imdb.com/title/tt0114814/" data-title="The Usual Suspects" tabindex="0">
+  <img alt="Poster de The Usual Suspects" class="poster-image" height="450" src="imagens/The_Usual_Suspects.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Usual Suspects</div>
+    <div class="poster-description">The sole survivor of a pier shoot-out tells the story of how a notorious criminal influenced the events that began with five criminals meeting in a seemingly random police lineup.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A reclusive, morbidly obese English teacher attempts to reconnect with his estranged teenage daughter." data-link="https://www.imdb.com/title/tt13833688/" data-title="The Whale" tabindex="0">
+  <img alt="Poster de The Whale" class="poster-image" height="450" src="imagens/The_Whale.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Whale</div>
+    <div class="poster-description">A reclusive, morbidly obese English teacher attempts to reconnect with his estranged teenage daughter.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="A traumatized veteran unafraid of violence tracks down missing girls for a living. When a job spins out of control, Joe's nightmares overtake him as a conspiracy is uncovered leading to what could be his death trip or his awakening." data-link="https://www.imdb.com/title/tt5742374/" data-title="You Were Never Really Here" tabindex="0">
+  <img alt="Poster de You Were Never Really Here" class="poster-image" height="450" src="imagens/You_Were_Never_Really_Here.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">You Were Never Really Here</div>
+    <div class="poster-description">A traumatized veteran unafraid of violence tracks down missing girls for a living. When a job spins out of control, Joe's nightmares overtake him as a conspiracy is uncovered leading to what could be his death trip or his awakening.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Between 1968 and 1983, a San Francisco cartoonist becomes an amateur detective obsessed with tracking down the Zodiac Killer, an unidentified individual who terrorizes Northern California with a killing spree." data-link="https://www.imdb.com/title/tt0443706/" data-title="Zodiac" tabindex="0">
+  <img alt="Poster de Zodiac" class="poster-image" height="450" src="imagens/Zodiac.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">Zodiac</div>
+    <div class="poster-description">Between 1968 and 1983, a San Francisco cartoonist becomes an amateur detective obsessed with tracking down the Zodiac Killer, an unidentified individual who terrorizes Northern California with a killing spree.</div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+  </div>
+</div>
+<!-- Início do filme -->
+<div class="poster-card" data-description="Auschwitz commandant Rudolf Höss and his wife Hedwig strive to build a dream life for their family in a house and garden beside the camp." data-link="https://www.imdb.com/title/tt7160372/" data-title="The Zone of Interest" tabindex="0">
+  <img alt="Poster de The Zone of Interest" class="poster-image" height="450" src="imagens/The_Zone_of_Interest.jpg" width="300"/>
+  <div class="poster-info">
+    <div class="poster-title">The Zone of Interest</div>
+    <div class="poster-description">Auschwitz commandant Rudolf Höss and his wife Hedwig strive to build a dream life for their family in a house and garden beside the camp.</div>
+  </div><button class="read-more-btn" onclick="openModalFromCard(this, event)">Ler mais</button>
+</div>
+<!-- Fim do filme -->
+</div>
+<script>
+function openModalFromCard(button, event) {
+  event.stopPropagation(); // impede que o clique vá para o card
+  const card = button.closest('.poster-card');
+  const title = card.getAttribute('data-title');
+  const image = card.querySelector('img').getAttribute('src');
+  const sinopse = card.querySelector('.poster-description').textContent;
+
+  document.getElementById("modalTitle").textContent = title;
+  document.getElementById("modalImage").src = image;
+  document.getElementById("modalSinopse").textContent = sinopse;
+
+  document.getElementById("modal").style.display = "block";
+}
+
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+}
+
+// Fechar modal ao clicar fora
+window.onclick = function(event) {
+  const modal = document.getElementById("modal");
+  if (event.target === modal) {
+    closeModal();
+  }
+}
+
+ const postersGrid = document.getElementById('postersGrid');
+    const searchInput = document.getElementById('searchInput');
+
+    // Filter posters by search
+    searchInput.addEventListener('input', () => {
+      const filter = searchInput.value.toLowerCase();
+      const posters = postersGrid.querySelectorAll('.poster-card');
+      posters.forEach(poster => {
+        const title = poster.dataset.title.toLowerCase();
+        const description = poster.dataset.description.toLowerCase();
+        if (title.includes(filter) || description.includes(filter)) {
+          poster.style.display = '';
+        } else {
+          poster.style.display = 'none';
+        }
+      });
+    });
+
+    // On poster click or keyboard enter/space, open link in new tab
+    postersGrid.addEventListener('click', e => {
+      const poster = e.target.closest('.poster-card');
+      if (!poster) return;
+      const url = poster.dataset.link;
+      if (url && url.trim() !== '') {
+        window.open(url, '_blank', 'noopener');
+      }
+    });
+
+    postersGrid.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        const poster = e.target.closest('.poster-card');
+        if (!poster) return;
+        e.preventDefault();
+        const url = poster.dataset.link;
+        if (url && url.trim() !== '') {
+          window.open(url, '_blank', 'noopener');
+        }
+      }
+    });
+</script>
+<!-- Modal -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <h2 id="modalTitle"></h2>
+    <img id="modalImage" src="" alt="Poster do filme"/>
+    <p id="modalSinopse"></p>
+  </div>
+</div>
+
+</body>
+</html>
